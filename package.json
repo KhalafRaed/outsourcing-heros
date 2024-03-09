@@ -4,6 +4,10 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "run:ui": "cd packages/hero-ui && npm run start",
+    "run:backend": "cd packages/hero-backend npm run start"
+  },
   "dependencies": {},
   "devDependencies": {
     "lerna": "^8.1.2"
