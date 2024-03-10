@@ -10,11 +10,15 @@ import {
   provideHttpClient,
 } from '@angular/common/http'
 import { AppInterceptor } from './shared/interceptors/http.interceptor'
+import { HeroesState } from './state/heroes/heroes.state'
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(NgxsModule.forRoot([AuthState]), HttpClientModule),
+    importProvidersFrom(
+      NgxsModule.forRoot([AuthState, HeroesState]),
+      HttpClientModule
+    ),
     { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true },
   ],
 }

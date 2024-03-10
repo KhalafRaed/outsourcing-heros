@@ -21,6 +21,6 @@ export class AuthService {
   }
 
   logout() {
-    this.store.dispatch(new Logout())
+    return this.http.post('/logout', {})
   }
 }

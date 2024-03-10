@@ -1,3 +1,5 @@
+import { UserType } from '../../shared/types/user'
+
 export class Login {
   static readonly type = '[Auth] Login'
   constructor(public payload: { email: string; password: string }) {}
@@ -17,4 +19,9 @@ export class AuthFailure {
 
 export class Logout {
   static readonly type = '[Auth] Logout'
+}
+
+export class UpdateUser {
+  static readonly type = '[User] Update'
+  constructor(public user: UserType) {}
 }

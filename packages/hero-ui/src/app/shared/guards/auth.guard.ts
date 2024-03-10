@@ -1,11 +1,11 @@
 // auth.guard.ts
-import { Injectable } from '@angular/core'
+import { Injectable, NgZone } from '@angular/core'
 import { CanActivate, Router } from '@angular/router'
-import { Observable, of, throwError } from 'rxjs'
+import { EMPTY, Observable, of } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
-import { AuthState } from '../../state/auth/auth.state'
 import { HttpClient } from '@angular/common/http'
-import { AuthFailure } from '../../state/auth/auth.actions'
+import { Store } from '@ngxs/store'
+import { UpdateUser } from '../../state/auth/auth.actions'
 
 @Injectable({
   providedIn: 'root',
@@ -13,16 +13,22 @@ import { AuthFailure } from '../../state/auth/auth.actions'
 export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private ngZone: NgZone,
+    private store: Store
   ) {}
 
   canActivate(): Observable<boolean> {
-    return this.http.get('/check-auth').pipe(
+    return this.http.get('/user').pipe(
       tap((response: any) => {
+        this.store.dispatch(new UpdateUser(response))
         return of(true)
       }),
       catchError((error: any) => {
-        return this.router.navigateByUrl('/auth/login')
+        this.ngZone.run(() => {
+          void this.router.createUrlTree(['auth/login'])
+        })
+        return EMPTY
       })
     )
   }

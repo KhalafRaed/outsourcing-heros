@@ -1,0 +1,25 @@
+<nav class="bg-gray-800 p-4 flex justify-between items-center">
+  <div class="flex items-center space-x-4">
+    <button class="text-white hover:text-gray-300">All Heroes</button>
+    <button class="text-white hover:text-gray-300" *adminFeature>
+      Add Hero
+    </button>
+  </div>
+  <div class="flex items-center space-x-4">
+    <div class="relative">
+      <button class="text-gray-300" (click)="onLogout()">Logout</button>
+    </div>
+    <div class="relative group">
+      <img
+        src="/assets/avatar.png"
+        alt="Avatar"
+        class="h-8 w-8 rounded-full cursor-pointer"
+      />
+      <div
+        class="hidden group-hover:block absolute bg-white p-2 rounded shadow-md right-0 top-full"
+      >
+        <span class="text-gray-800">user&#64;example.com</span>
+      </div>
+    </div>
+  </div>
+</nav>

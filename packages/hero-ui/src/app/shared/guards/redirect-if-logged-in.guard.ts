@@ -1,29 +1,32 @@
 // auth.guard.ts
-import { Injectable } from '@angular/core'
+import { Injectable, NgZone } from '@angular/core'
 import { CanActivate, Router } from '@angular/router'
-import { Store, Select } from '@ngxs/store'
-import { map, Observable, of } from 'rxjs'
-import { AuthState } from '../../state/auth/auth.state'
+import { Observable, of } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
 import { HttpClient } from '@angular/common/http'
+import { Store } from '@ngxs/store'
+import { updateItem } from '@ngxs/store/operators'
+import { UpdateUser } from '../../state/auth/auth.actions'
 
 @Injectable({
   providedIn: 'root',
 })
 export class RedirectIfLoggedInGuard implements CanActivate {
-  // @ts-ignore
-  @Select(AuthState.isLoggedIn) isLoggedIn$: Observable<boolean>
-
   constructor(
-    private store: Store,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private ngZone: NgZone,
+    private store: Store
   ) {}
 
   canActivate(): Observable<boolean> {
-    return this.http.get('/check-auth').pipe(
+    return this.http.get('/user').pipe(
       tap((response: any) => {
-        this.router.navigateByUrl('/home')
+        this.store.dispatch(new UpdateUser(response))
+        this.ngZone.run(() => {
+          void this.router.createUrlTree(['home'])
+        })
+        return of(false)
       }),
       catchError((error: any) => {
         return of(true)

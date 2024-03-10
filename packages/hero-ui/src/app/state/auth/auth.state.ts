@@ -1,18 +1,18 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store'
-import { Login, AuthFailure, Logout, Register } from './auth.actions'
+import {
+  Login,
+  AuthFailure,
+  Logout,
+  Register,
+  UpdateUser,
+} from './auth.actions'
 import { Injectable } from '@angular/core'
 import { AuthService } from '../../shared/services/auth.service'
 import { catchError, tap } from 'rxjs/operators'
 import { throwError } from 'rxjs'
 import { UserType } from '../../shared/types/user'
 import { Router } from '@angular/router'
-
-export interface AuthStateModel {
-  loggedIn: boolean
-  loading: boolean
-  error?: string
-  user?: UserType
-}
+import { AuthStateModel } from '../../shared/types/state'
 
 @State<AuthStateModel>({
   name: 'auth',
@@ -26,6 +26,11 @@ export class AuthState {
   @Selector()
   static isLoggedIn(state: AuthStateModel) {
     return state.loggedIn
+  }
+
+  @Selector()
+  static user(state: AuthStateModel) {
+    return state.user
   }
 
   @Selector()
@@ -80,9 +85,30 @@ export class AuthState {
     )
   }
 
+  @Action(UpdateUser)
+  updateUser(ctx: StateContext<AuthStateModel>, action: UpdateUser) {
+    ctx.patchState({
+      user: action.user,
+    })
+  }
+
   @Action(Logout)
   logout(ctx: StateContext<AuthStateModel>) {
-    ctx.patchState({ loggedIn: false })
+    ctx.patchState({
+      loading: true,
+      error: undefined,
+    })
+
+    return this.authService.logout().pipe(
+      tap((result) => {
+        ctx.patchState({ loggedIn: false, user: undefined })
+        this.router.navigateByUrl('/auth/login')
+      }),
+      catchError((error) => {
+        ctx.dispatch(new AuthFailure(error.error))
+        return throwError(error)
+      })
+    )
   }
 
   @Action(AuthFailure)

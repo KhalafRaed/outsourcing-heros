@@ -1,0 +1,47 @@
+<div class="container mx-auto py-20">
+  <div class="mb-4 flex flex-row justify-between">
+    <input
+      class="border border-gray-300 rounded-lg px-4 py-2 mb-2"
+      type="text"
+      placeholder="Filter by email"
+      [(ngModel)]="filterValue"
+    />
+    <button
+      class="bg-blue-500 text-white px-4 py-2 rounded-lg"
+      (click)="toggleSortKey()"
+    >
+      Sort by {{ sortBy === 'email' ? 'Power Name' : 'Email' }}
+    </button>
+  </div>
+  <table class="min-w-full">
+    <thead>
+      <tr>
+        <th
+          class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Email
+        </th>
+        <th
+          class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Power Name
+        </th>
+        <th
+          class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Rating
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let user of users | sortAndFilter: filterValue : sortBy"
+        class="border-t border-gray-200"
+      >
+        <td class="px-6 py-4 whitespace-no-wrap">{{ user.email }}</td>
+        <td class="px-6 py-4 whitespace-no-wrap">{{ user.powerName }}</td>
+        <td class="px-6 py-4 whitespace-no-wrap">{{ user.rating }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

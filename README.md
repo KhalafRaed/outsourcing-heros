@@ -23,3 +23,19 @@ To get started with the project, follow these steps:
    npm run run:backend
 
 Open the browser with http://localhost:4200
+
+
+## Admin User
+
+```angular2html
+email: raed.admin@gmail.com
+password: 12341234
+```
+
+
+## Hero User
+
+```angular2html
+email: raed.hero@gmail.com
+password: 12341234
+```
