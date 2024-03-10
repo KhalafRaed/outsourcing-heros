@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core'
 import { Store } from '@ngxs/store'
 import { Login, Logout } from '../../state/auth/auth.actions'
+import { HttpClient } from '@angular/common/http'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private store: Store) {}
+  constructor(
+    private store: Store,
+    private http: HttpClient
+  ) {}
 
-  login(password: string, email: string) {
-    console.log(password, email)
-    this.store.dispatch(new Login())
+  login(credentials: { password: string; email: string }) {
+    return this.http.post('/login', credentials)
   }
 
-  register(email: string, password: string, powerName: string) {
-    console.log(password, email)
-    this.store.dispatch(new Login())
+  register(payload: { email: string; password: string; powerName: string }) {
+    return this.http.post('/register', payload)
   }
 
   logout() {
